@@ -26,15 +26,16 @@ from keras.callbacks import EarlyStopping
 from pickle import load
 
 # Import the data
-train_df = pd.read_csv("jokes2.txt", header=0, sep="\n")
-train_df = train_df["Jokes"]
+train_df = pd.read_csv("jokes2.txt", header=1, sep="\n")
+
+# train_df = train_df["Jokes"]
 print("Number of training sentences: ", train_df.shape[0])
 print(train_df.head())
 
 max_words = 50000  # Max size of the dictionary
 tokenizer = Tokenizer(num_words=max_words)
-tokenizer.fit_on_texts(train_df.values)
-sequences = tokenizer.texts_to_sequences(train_df.values)
+tokenizer.fit_on_texts(train_df.values.tolist())
+sequences = tokenizer.texts_to_sequences(train_df.values.tolist())
 print(sequences[:5])
 
 # Flatten the list of lists resulting from the tokenization. This will reduce the list
@@ -58,7 +59,7 @@ reverse_word_map = dict(map(reversed, tokenizer.word_index.items()))
 # Save tokenizer
 # dump(tok, open('tokenizer.pkl', 'wb'))
 
-# Each row in seq is a 20 word long window. We append he first 19 words as the input to predict the 20th word
+# Each row in seq is a 20 word long window. We append the first 19 words as the input to predict the 20th word
 trainX = []
 trainy = []
 for i in seq:
